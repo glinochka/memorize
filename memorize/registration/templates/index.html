@@ -18,7 +18,13 @@
                 <a href = "{% url 'signup' %}"><button type="button" class="btn btn-dark">Регистрация</button></a>
             </div>
         </div>
-    {%endif%}
+    {% else %}
+        <div class="text-center ">
+            <div class="btn-group" role="group" aria-label="Basic button group">
+                <form action="" method="GET"><button name="logout" value="value" type= "submit" class="btn btn-dark">Выход</button></form>
+            </div>
+        </div>
+    {% endif %}
 
 
 

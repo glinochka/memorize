@@ -1,0 +1,16 @@
+{%extends 'base.html' %}
+
+{% block title %} Добавить текст {% endblock title %}
+
+{%block body%}
+    <div class = "text-white text-center d-flex flex-column align-items-center">
+        {%for i in titles%}
+            <div class="btn-group btn-group-lg m-3" role="group" aria-label="Large button group">
+                <form action="{%url 'read' %}" method="GET"><button name="title" value="{{i}}" type= "submit" class="btn btn-dark border border-white">{{i}}</button></form>
+                <form action="" method="GET"><button name="delete" value="{{i}}" type= "submit" class="btn btn-danger">удалить</button></form>
+            </div>
+        {%endfor%}
+        <a href = "{% url 'home' %}" ><button class = "btn btn-dark border border-white p-2 m-3" >Назад</button></a> 
+    </div>
+
+{%endblock body%}

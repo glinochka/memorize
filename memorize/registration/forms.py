@@ -11,7 +11,7 @@ class SignUpForm(UserCreationForm):
 
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control form-label bg-dark text-white mx-auto m-2',
-                                       'style': 'width: 40%'}) 
+                                       'style': 'width: 80%'}) 
 
 
 class LoginForm(AuthenticationForm):
@@ -22,4 +22,4 @@ class LoginForm(AuthenticationForm):
 
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control form-label bg-dark text-white mx-auto m-2',
-                                       'style': 'width: 40%'})
+                                       'style': 'width: 80%'})

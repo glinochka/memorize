@@ -1,0 +1,11 @@
+{%extends 'base.html' %}
+
+{% block title %} {{title}} {% endblock title %}
+
+{%block body%}
+    <pre>
+        {% autoescape off %}
+            {{text}}
+        {% endautoescape %}
+    </pre>
+{%endblock body%}

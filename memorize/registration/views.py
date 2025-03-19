@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm
 
@@ -8,7 +7,7 @@ def home(request):
     if request.method == 'GET':
         if 'logout' in request.GET: logout(request)
     x = request.user
-    if str(request.user) == 'AnonymousUser': x = 'Guest'
+    if str(request.user) == 'AnonymousUser': x = None
     
     return render(request, 'index.html', {'user' : x})
 

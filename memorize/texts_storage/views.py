@@ -54,11 +54,14 @@ def read_article(request):
         if title:
             dir = Articles.objects.get(title = title).article.file
             file_name = dir.name.split('/')[-1].split('\\')[-1]
-            return render(request, f'{request.user.username}/{file_name}', {'title':title})
+            path = f'{request.user.username}/{file_name}'
+            context = {
+                'path': path
+            }
+            return render(request, f'read.html', context)
              
         else:
-            text = 'Что-то пошло не так.'
-            return render(request, f'read.html', {'text': text, 'title': title})
+            return render(request, f'somethings_wrong.html')
     
                
     

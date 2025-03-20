@@ -1,0 +1,12 @@
+{%extends 'base.html' %}
+
+{% block title %} somethings_wrong {% endblock title %}
+
+{%block body%}
+    <div class = "text-white text-center d-flex flex-column align-items-center">
+        <p>Упс что-то пошло не так</p>
+        <a href = "{% url 'home' %}" ><button class = "btn btn-dark border border-white p-2 m-3" >Назад</button></a> 
+    </div>
+            
+
+{%endblock body%}

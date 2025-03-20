@@ -60,7 +60,7 @@ ROOT_URLCONF = 'memorize.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'files')],
+        'DIRS': [os.path.join(BASE_DIR, 'files'),os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

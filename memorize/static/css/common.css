@@ -12,7 +12,3 @@ html ::-webkit-scrollbar {
     display: none; /* Скрыть скроллбар в вебкит-браузерах */
 }
 
-.hover-text-warning:hover {
-    color: #882020; 
-    cursor: pointer; 
-}

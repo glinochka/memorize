@@ -4,9 +4,13 @@ import os
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 
-def wrap_words_in_tag(text_node, tag_name, is_a):
-    words = text_node.split()  
-    wrapped_words = [f"<{tag_name}>{word}</{tag_name}>" for word in words] 
+def wrap_words_in_tag(text_node, tag_name, is_a, count):
+    words = text_node.split()
+    wrapped_words = []
+
+    for word in words:
+        count+=1
+        wrapped_words += [f"<{tag_name} id = '{count}'>{word}</{tag_name}>"]
 
     if is_a:
         new_text = '&nbsp;' + " ".join(wrapped_words) + '&nbsp;'
@@ -15,15 +19,21 @@ def wrap_words_in_tag(text_node, tag_name, is_a):
 
     text_node.replace_with(BeautifulSoup(new_text, 'html.parser'))
 
+    return count
+
 
 
 def wrap_w(soup):
+    count = 0
     for i in soup.body.descendants:
         if type(i) == NavigableString and not i.isspace():
-            wrap_words_in_tag(i, 'w',  any('a' == p.name for p in i.parents))
+            count = wrap_words_in_tag(i, 'w',  any('a' == p.name for p in i.parents), count)
 
     return str(soup)
 
+def addtempls(html, style, button, script):
+    html = html.replace('</head>', style+'</head>').replace('</body>', script+'</body>').replace('</body>', button+'</body>')
+    return html
 
 
 
@@ -40,10 +50,10 @@ def savy_html(uploaded_file):
         a_tag['target'] = '_blank'
 
     data = wrap_w(soup)
+    data = '{%load static%}' + data.replace('{{','{_{').replace('}}','}_}')
 
-    if not fnmatch(data, '{% verbatim %}*{% endverbatim %}'):
-        data = '{% verbatim %}' + data + '{% endverbatim %}'
-
+    data = addtempls(data, '{% include "style.html" %}', '{% include "button.html" %}', '{% include "script.html" %}')
+    
     with open(os.path.join(settings.MEDIA_ROOT, uploaded_file),'w', encoding='utf-8') as file:
         file.write(data)
     

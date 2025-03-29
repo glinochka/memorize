@@ -16,5 +16,5 @@ class NewArticle(forms.ModelForm):
             else:
                 field.widget.attrs.update({'class': 'form-control form-label bg-dark text-white mx-auto m-2',
                                         'style': 'width: 80%'})
-        #self.fields['articles'].required = False
+        
 

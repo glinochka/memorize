@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Articles
+from .models import Articles, Words
 from .forms import NewArticle
 from .utils import savy_html
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 
 def new_article(request): 
     last_article = Articles.objects.filter(user = request.user).last()
@@ -50,18 +52,49 @@ def listof_articles(request):
 def read_article(request): 
     if request.method == 'GET':
         title = request.GET.get('title')
-        
         if title:
-            dir = Articles.objects.get(title = title).article.file
+            article = Articles.objects.get(title = title)
+            dir = article.article.file
             file_name = dir.name.split('/')[-1].split('\\')[-1]
-            path = f'{request.user.username}/{file_name}'
-            context = {
-                'path': path
+            transles = [[w.id_word, w.transl] for w in list(Words.objects.filter(article = article))]
+            
+            data = {
+                'title': title,
+                'transles': transles
             }
-            return render(request, f'read.html', context)
+
+            data = json.dumps(data, cls=DjangoJSONEncoder)
+            context = {'data' : data}
+            return render(request, f'{request.user.username}/{file_name}', context)
              
         else:
             return render(request, f'somethings_wrong.html')
+    elif request.method == 'POST':
+        post = request.POST
+        title = post.get('title')
+        article = Articles.objects.get(title = title)
+        word = Words.objects.filter(article = article, id_word = int(request.POST.get('id')))
+
+        if word.exists():
+            word.update(transl = post.get('trans'))
+        else:
+            Words(article=article, id_word = int(post.get('id')), transl = post.get('trans')).save()
+
+        dir = article.article.file
+        file_name = dir.name.split('/')[-1].split('\\')[-1]
+
+        transles = [[w.id_word, w.transl] for w in list(Words.objects.filter(article = article))]
+        data = {
+            'title': title,
+            'transles': transles
+        }
+
+        data = json.dumps(data, cls=DjangoJSONEncoder)
+        context = {'data' : data}
+
+        return render(request, f'{request.user.username}/{file_name}', context)
+    else:
+        return render(request, f'somethings_wrong.html')
     
                
     

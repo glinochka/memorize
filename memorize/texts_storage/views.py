@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Articles, Words
+from .models import Articles, Words, Many_Words
 from .forms import NewArticle
 from .utils import savy_html
 from django.core.serializers.json import DjangoJSONEncoder
@@ -49,49 +49,56 @@ def listof_articles(request):
                }
     return render(request, 'list.html', context)
 
-def read_article(request): 
-    if request.method == 'GET':
-        title = request.GET.get('title')
-        if title:
-            article = Articles.objects.get(title = title)
-            dir = article.article.file
-            file_name = dir.name.split('/')[-1].split('\\')[-1]
-            transles = [[w.id_word, w.transl] for w in list(Words.objects.filter(article = article))]
-            
-            data = {
-                'title': title,
-                'transles': transles
-            }
+def read_article(request):
+    if request.method == 'POST': title = request.POST.get('title')
+    elif request.method == 'GET': title = request.GET.get('title')
 
-            data = json.dumps(data, cls=DjangoJSONEncoder)
-            context = {'data' : data}
-            return render(request, f'{request.user.username}/{file_name}', context)
-             
-        else:
-            return render(request, f'somethings_wrong.html')
-    elif request.method == 'POST':
+    if request.method == 'POST':
         post = request.POST
-        title = post.get('title')
         article = Articles.objects.get(title = title)
-        word = Words.objects.filter(article = article, id_word = int(request.POST.get('id')))
+        if 'words' in post:
+            start = int(post.get('id_start_word'))
+            end = int(post.get('id_end_word'))
 
-        if word.exists():
-            word.update(transl = post.get('trans'))
+            many_words = Many_Words.objects.filter(article = article, id_start_word__range = (start,end)) \
+                | Many_Words.objects.filter(article = article, id_end_word__range = (start,end))
+
+            words = Words.objects.filter(article = article, id_word__range = (start,end))
+
+            all_old_words = list(many_words) + list(words)
+
+            if len(all_old_words):
+                for i in all_old_words: i.delete()
+            Many_Words(article=article, id_start_word = start, id_end_word = end, words = post.get('words'), transl = post.get('trans')).save()
         else:
-            Words(article=article, id_word = int(post.get('id')), transl = post.get('trans')).save()
+            id = int(request.POST.get('id'))
+            many_words = Many_Words.objects.filter(article = article, id_start_word__lte = id) \
+                & Many_Words.objects.filter(article = article, id_end_word__gte = id)
+            
+            word = Words.objects.filter(article = article, id_word = id)
+            if many_words.exists():
+                for i in many_words: i.delete()
 
+            if word.exists():
+                word.update(transl = post.get('trans'))
+            else:
+                Words(article=article, id_word = int(post.get('id')),word = post.get('word'), transl = post.get('trans')).save()
+    
+    if title:
+        article = Articles.objects.get(title = title)
         dir = article.article.file
         file_name = dir.name.split('/')[-1].split('\\')[-1]
 
         transles = [[w.id_word, w.transl] for w in list(Words.objects.filter(article = article))]
+        many_transles = [[w.id_start_word, w.id_end_word, w.transl] for w in list(Many_Words.objects.filter(article = article))]
         data = {
             'title': title,
-            'transles': transles
+            'transles': transles,
+            'many_transles': many_transles
         }
 
         data = json.dumps(data, cls=DjangoJSONEncoder)
         context = {'data' : data}
-
         return render(request, f'{request.user.username}/{file_name}', context)
     else:
         return render(request, f'somethings_wrong.html')

@@ -18,6 +18,17 @@ class Articles(models.Model):
 class Words(models.Model):
     article = models.ForeignKey(Articles, on_delete=models.CASCADE)
     id_word = models.IntegerField()
+    word = models.CharField(max_length = 255)
     transl = models.CharField(max_length = 255)
     def __str__(self):
         return f'{self.id_word} in {self.article} -> {self.transl}'
+    
+
+class Many_Words(models.Model):
+    article = models.ForeignKey(Articles, on_delete=models.CASCADE)
+    id_start_word = models.IntegerField()
+    id_end_word = models.IntegerField()
+    words = models.CharField(max_length = 255)
+    transl = models.CharField(max_length = 255)
+    def __str__(self):
+        return f'{self.id_start_word} - {self.id_end_word} in {self.article} -> {self.transl}'

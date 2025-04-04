@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('registration.urls')),
     path('', include('texts_storage.urls')),
 
+
 ]+ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

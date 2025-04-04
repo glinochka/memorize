@@ -54,13 +54,11 @@ body.addEventListener('mouseup', ()=>{
         document.body.insertAdjacentHTML('afterbegin', modalHTML);
         var kr = document.querySelector('.btn-close');
         var add = document.getElementById('add');
-        selection.removeAllRanges()
+        
         // Закрытие при клике на крестик
         kr.addEventListener('click', () => {
-            
-            add.remove();
-            
-
+          selection.removeAllRanges()
+          add.remove();
         });
 
         

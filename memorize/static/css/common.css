@@ -2,13 +2,12 @@ ul {
     list-style-type: none;
 }
 /* Для вебкит-браузеров (Chrome, Safari, Edge) */
-html{
+html {
     overflow: auto; /* или overflow: scroll; */
     scrollbar-width: none; /* Для Firefox */
     -ms-overflow-style: none; /* Для Internet Explorer и Edge */
 }
-
-html ::-webkit-scrollbar {
+html::-webkit-scrollbar {
     display: none; /* Скрыть скроллбар в вебкит-браузерах */
 }
 

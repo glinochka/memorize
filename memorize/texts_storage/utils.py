@@ -31,8 +31,10 @@ def wrap_w(soup):
 
     return str(soup)
 
-def addtempls(html, style, button, script):
-    html = html.replace('</head>', style+'</head>').replace('</body>', script+'</body>').replace('</body>', button+'</body>')
+def addtempls(html, style, button, script, soup:BeautifulSoup):
+    head = str(soup.head)[:str(soup.head).index('>')+1]
+    print(head)
+    html = html.replace(head, head+style).replace('</body>', script+'</body>').replace('</body>', button+'</body>')
     return html
 
 
@@ -52,7 +54,7 @@ def savy_html(uploaded_file):
     data = wrap_w(soup)
     data = '{%load static%}' + data.replace('{{','{_{').replace('}}','}_}')
 
-    data = addtempls(data, '{% include "style.html" %}', '{% include "button.html" %}', '{% include "script.html" %}')
+    data = addtempls(data, '{% include "style.html" %}', '{% include "button.html" %}', '{% include "script.html" %}',soup)
     
     with open(os.path.join(settings.MEDIA_ROOT, uploaded_file),'w', encoding='utf-8') as file:
         file.write(data)

@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 from django.core.validators import FileExtensionValidator
 
     
@@ -18,10 +17,11 @@ class Articles(models.Model):
 class Words(models.Model):
     article = models.ForeignKey(Articles, on_delete=models.CASCADE)
     id_word = models.IntegerField()
-    word = models.CharField(max_length = 255)
+    words = models.CharField(max_length = 255)
     transl = models.CharField(max_length = 255)
+    rate = models.IntegerField(default=0)
     def __str__(self):
-        return f'{self.id_word} in {self.article} -> {self.transl}'
+        return f'{self.words} -> {self.transl}'
     
 
 class Many_Words(models.Model):
@@ -30,5 +30,6 @@ class Many_Words(models.Model):
     id_end_word = models.IntegerField()
     words = models.CharField(max_length = 255)
     transl = models.CharField(max_length = 255)
+    rate = models.IntegerField(default=0)
     def __str__(self):
-        return f'{self.id_start_word} - {self.id_end_word} in {self.article} -> {self.transl}'
+        return f'{self.words} -> {self.transl}'

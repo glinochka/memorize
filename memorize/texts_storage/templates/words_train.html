@@ -1,0 +1,26 @@
+{%extends 'base.html' %}
+
+{% block title %} training {% endblock title %}
+
+{%block body%}
+    <div class = "text-white text-center d-flex flex-column align-items-center">
+        <div class = "bg-dark p-2 m-3 text-white rounded-3" id = "add" style = "width:30%">
+            <form method = "get">
+              
+              <legend class = "border border-dark px-3 rounded" style = "width:fit-content">{{words.words}}</legend>
+              <input type="text" class="bg-dark form-control text-white form-label" name ="trans">
+              <input type="hidden" name ="article" value="{{words.article}}">
+              <input type="hidden" name ="is_word" value="{{is_word}}">
+              <button name="words" value = "{{words}}" class = "btn btn-dark p-3" type="submit">Отправить</button>
+            </form>
+          </div>
+        {%if mess%}
+            <p class="text-danger">{{mess}}</p>
+        {% else %}
+        <p class="text-success">Правильно!</p>
+        {%endif%}
+        <a href = "{% url 'home' %}" ><button class = "btn btn-dark border border-white p-2 m-3" >Назад</button></a> 
+    </div>
+            
+
+{%endblock body%}

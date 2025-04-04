@@ -3,5 +3,14 @@
     w:hover {
         color: #0004ff; 
         cursor: pointer; 
-        }
+        background-color: aquamarine;
+    }
+    w::selection {
+        background: aquamarine; /* Прозрачный фон */
+        color: #0004ff;       /* Цвет текста как обычно */
+    }
+    ::selection {
+        background: transparent; /* Прозрачный фон */
+        color: inherit;       /* Цвет текста как обычно */
+    }
 </style>

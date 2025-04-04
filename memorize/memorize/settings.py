@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'registration.apps.RegistrationConfig',
-    'texts_storage.apps.TextsStorageConfig'
+    'texts_storage.apps.TextsStorageConfig',
 ]
 
 MIDDLEWARE = [

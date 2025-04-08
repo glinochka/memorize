@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Articles, Words, Many_Words
+from django.http import JsonResponse
 
 
 
@@ -138,13 +139,15 @@ def words_training(request):
     try:
         word = words_with_rate[0]
     except IndexError:
-        return render(request,'somethings_wrong.html',{'mess':'Вы еще не добавили слов с переводами'})
-    if 'words' in request.GET:
-        get = request.GET
+        return JsonResponse({'error':'Вы еще не добавили слов с переводами'})
+    
+    if 'words' in request.POST:
+        get = request.POST
         t_words = get['words']
-        print(t_words)
+        print(get)
+        
 
-        if get['is_word'] == 'True': pr_word = Words.objects.get(article = Articles.objects.get(title=get['article']), words = t_words.split(' -> ')[0])
+        if get['is_word'] == 'true': pr_word = Words.objects.get(article = Articles.objects.get(title=get['article']), words = t_words.split(' -> ')[0])
         else: pr_word = Many_Words.objects.get(article = Articles.objects.get(title=get['article']), words = t_words.split(' -> ')[0])
 
         if not (get['trans'] == t_words.split(' -> ')[-1]):
@@ -159,13 +162,20 @@ def words_training(request):
         while word ==  pr_word:
             c+=1
             word = words[c]
-
+    words = ''
+    for i in word.words:
+        if i in '~`!@#$%^&*()_+-"№;%:?,*': continue
+        words += i
         
     context = {
-        'words': word,
+        'words': {
+            'words': words,
+            'article': str(word.article),
+            'st_words': str(word)
+            },
         'mess': mess,
         'is_word': isinstance(word, Words)
     }
-    return render(request, 'words_train.html', context)
+    return JsonResponse(context)
     
 

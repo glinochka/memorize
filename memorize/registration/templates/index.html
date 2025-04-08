@@ -1,8 +1,10 @@
 {%extends 'base.html' %}
+{%load static%}
 
 {% block title %} Личный кабинет {% endblock title %}
 
 {%block body%}
+    {%csrf_token%}
     {%if not user%}
         <div class="text-center ">
             <p>Привет, незарегестированный пользователь</p>
@@ -12,20 +14,36 @@
             </div>
         </div>
     {% else %}
-        <div class="text-center ">
-            <p >Привет, {{user}}</p>
-            <div  class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                <a href = "{%url 'add'%}" class = "btn d-block"><button class="btn btn-dark">Добавить текст</button></a>
-                <a href = "{%url 'list'%}" class = "btn d-block"><button class="btn btn-dark">Список текстов</button></a>
-                <a href = "{%url 'train'%}" class = "btn d-block"><button class="btn btn-dark">Тренировка на словах</button></a>
-                <form action="" method="GET" class = "btn d-block"><button name="logout" value="value" type= "submit" class="btn btn-dark">Выход</button></form>
+    <p>Привет, {{user}}</p>
+        <div class="d-flex justify-content-start">
+            <div class="container-fluid vh-100 text-center">
+                <div class="row h-100 g-0">
+                    <div class="col-md-4 p-4">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a href = "{%url 'add'%}" class = "btn d-block"><button class="btn btn-dark">Добавить текст</button></a>
+                            <a href = "{%url 'list'%}" class = "btn d-block"><button class="btn btn-dark">Список текстов</button></a>
+                            <form action="" method="GET" class = "btn d-block"><button name="logout" value="value" type= "submit" class="btn btn-dark">Выход</button></form>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-8 bg-dark text-white p-4" id = "word_train">  </div>
+                    
+                </div>
             </div>
-            
-            
         </div>
-        <footer class="text-center fixed-bottom">
-            <p class = "m-5"><b class="text-danger">Предупреждение:</b> Сайт раcчитан на работу с одиночными HTML файлами с уже полностью готовой весткой </p>
-            <p class = "m-5">Для получения таких HTML-файлов можно воспользоваться расширением: <a target="_blank" href="https://chromewebstore.google.com/detail/save-page-we/dhhpefjklgkmgeafimnjhojgjamoafof">Save Page WE</a></p>
-        </footer>
     {% endif %}
+            
+            
+        <footer class="text-center fixed-bottom">
+            <p class = "m-3"><b class="text-danger">Предупреждение:</b> Сайт раcчитан на работу с одиночными HTML файлами с уже полностью готовой весткой </p>
+            <p class = "m-3">Для получения таких HTML-файлов можно воспользоваться расширением: <a target="_blank" href="https://chromewebstore.google.com/detail/save-page-we/dhhpefjklgkmgeafimnjhojgjamoafof">Save Page WE</a></p>
+        </footer>
+
+        <script>
+            var train = '{% url "train"%}';
+            
+        </script>
+        <script src = "{% static 'js/word_train.js'%}"></script>
+
+    
 {%endblock body%}
